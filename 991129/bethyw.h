@@ -6,7 +6,7 @@
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
   +---------------------------------------+
 
-  AUTHOR: <STUDENT NUMBER>
+  AUTHOR: <991129>
 
   This file contains declarations for the helper functions for initialising and
   running Beth Yw?
@@ -35,7 +35,7 @@ namespace BethYw {
 /*
   TODO: Enter your student number here!
 */
-const std::string STUDENT_NUMBER = "987654";
+const std::string STUDENT_NUMBER = "991129";
 
 /*
   Run Beth Yw?, parsing the command line arguments and acting upon them.
