@@ -139,7 +139,7 @@ const InputFileSource POPDEN = {
     {VALUE,         "Data"}
   }
 }; // const InputFileSource POPDEN
-
+//active businesses by area and year.
 const InputFileSource BIZ = {
   "biz",
   "Active Businesses",
