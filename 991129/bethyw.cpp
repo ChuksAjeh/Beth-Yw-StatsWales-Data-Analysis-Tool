@@ -194,6 +194,7 @@ std::vector<BethYw::InputFileSource> BethYw::parseDatasetsArg(
     auto inputDatasets = args["datasets"].as<std::vector<std::string>>();
 
     // want to make sure all codes are processed as lowercase initially.
+    // TODO: OPTIONAL - yank out into a helper function.
     if (!inputDatasets.empty()) {
         for (auto &code : inputDatasets) {
             std::transform(code.begin(), code.end(), code.begin(), ::tolower);
@@ -216,42 +217,13 @@ std::vector<BethYw::InputFileSource> BethYw::parseDatasetsArg(
     https://stackoverflow.com/questions/571394/how-to-find-out-if-an-item-is-present-in-a-stdvector
      */
 
-//    if (inputDatasets.size() == 1) {
-//        if ((!inputDatasets.empty() || inputDatasets[0] == "all") ||
-//            (!inputDatasets.empty() &&
-//             (std::find(inputDatasets.begin(), inputDatasets.end(), "all") != inputDatasets.end()))) {
-//            //TODO: Optional by Chuks -  make this part of a function to reduce concerns.
-//            try {
-//                for (unsigned int i = 0; i < numDatasets; ++i) {
-//                    datasetsToImport.push_back(allDatasets[i]);
-//                }
-//            } catch (std::invalid_argument &e) {
-//                std::cout << "Stacktrace: " << e.what() << std::endl;
-//            }
-//
-//        }
-//    } else {
-//        if (!inputDatasets.empty() ||
-//            (!inputDatasets.empty() &&
-//             (std::find(inputDatasets.begin(), inputDatasets.end(), "all") != inputDatasets.end()))) {
-//            //TODO: Optional by Chuks -  make this part of a function to reduce concerns.
-//            try {
-//                for (unsigned int i = 0; i < numDatasets; ++i) {
-//                    datasetsToImport.push_back(allDatasets[i]);
-//                }
-//            } catch (std::invalid_argument &e) {
-//                std::cout << "Stacktrace: " << e.what() << std::endl;
-//            }
-//
-//        }
-//    }
-    if(inputDatasets.empty() ||
-    (inputDatasets.size() ==1 && inputDatasets[0] == "all")
-    ||(std::find(inputDatasets.begin(), inputDatasets.end(), "all") != inputDatasets.end())){
+    if (inputDatasets.empty() ||
+        (inputDatasets.size() == 1 && inputDatasets[0] == "all")
+        || (std::find(inputDatasets.begin(), inputDatasets.end(), "all") != inputDatasets.end())) {
         for (unsigned int i = 0; i < numDatasets; ++i) {
             datasetsToImport.push_back(allDatasets[i]);
         }
-    }else {
+    } else {
         //n datasets to import:
         for (auto &code : inputDatasets) {
             bool matchFound = false;
@@ -268,15 +240,6 @@ std::vector<BethYw::InputFileSource> BethYw::parseDatasetsArg(
         }
 
     }
-
-    // You now need to compare the strings in this vector to the keys in
-    // allDatasets above. Populate datasetsToImport with the values
-    // from allDatasets above and then return a vector
-
-    // You'll want to ignore/remove the following lines of code, they simply
-    // import all datasets (for now) as an example to get you started
-//  for(unsigned int i = 0; i < numDatasets; i++)
-//      datasetsToImport.push_back(allDatasets[i]);
 
     //datasetsToImport can never be empty. If for whatever reason it is, fill it:
     try {
@@ -322,12 +285,49 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
         cxxopts::ParseResult &args) {
     // The unordered set you will return
     std::unordered_set<std::string> areas;
+    std::unordered_set<std::string> allAreaCodes;
+    std::ifstream areaCodesFile;
+    areaCodesFile.exceptions(std::ifstream::badbit);
+    /*reference:
+     * Execeptions https://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file
+     * */
+    //try to open areas.csv
+    try {
+        areaCodesFile.open("./datasets/areas.csv");
+        std::string line;
+        while (getline(areaCodesFile, line, ',')) {
+            allAreaCodes.insert(line);
+            getline(areaCodesFile, line, ',');
+            getline(areaCodesFile, line);
+        }
+    } catch (const std::ifstream::failure &e) {
+        std::cout << "ERROR when opening areas.csv file" << std::endl;
+    }
 
     // Retrieve the areas argument like so:
-    auto temp = args["areas"].as<std::vector<std::string>>();
-
-    // ...
-
+    auto areasDataset = args["areas"].as<std::vector<std::string>>();
+    if (!areasDataset.empty()) {
+        for (auto &area : areasDataset) {
+            std::transform(area.begin(), area.end(), area.begin(), ::toupper);
+        }
+    }
+    //no areas arg provided: - return empty set.
+    if (areasDataset.empty()) {
+        return areas;
+    } else { //otherwise
+        for (auto &area : areasDataset) {
+            if(area =="ALL"){
+                areas.clear();
+                break;
+            }else{
+                if(std::find(allAreaCodes.begin(), allAreaCodes.end(),area)!= allAreaCodes.end()){
+                    areas.insert(area);
+                }else{
+                    throw std::invalid_argument("Invalid input for area argument");
+                }
+            }
+        }
+    }
     return areas;
 }
 
