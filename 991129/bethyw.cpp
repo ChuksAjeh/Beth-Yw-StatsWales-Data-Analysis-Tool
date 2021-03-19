@@ -285,25 +285,25 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
         cxxopts::ParseResult &args) {
     // The unordered set you will return
     std::unordered_set<std::string> areas;
-    std::unordered_set<std::string> allAreaCodes;
-    std::ifstream areaCodesFile;
-    areaCodesFile.exceptions(std::ifstream::badbit);
-    /*reference:
-     * Execeptions https://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file
-     * */
-    //try to open areas.csv
-    try {
-        areaCodesFile.open("./datasets/areas.csv");
-        std::string line;
-        while (getline(areaCodesFile, line, ',')) {
-            allAreaCodes.insert(line);
-            getline(areaCodesFile, line, ',');
-            getline(areaCodesFile, line);
-        }
-    } catch (const std::ifstream::failure &e) {
-        std::cout << "ERROR when opening areas.csv file" << std::endl;
-    }
-
+//    std::unordered_set<std::string> allAreaCodes;
+//    std::ifstream areaCodesFile;
+//    areaCodesFile.exceptions(std::ifstream::badbit);
+//    /*reference:
+//     * Execeptions https://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file
+//     * */
+//    //try to open areas.csv
+//    try {
+//        areaCodesFile.open("./datasets/areas.csv");
+//        std::string line;
+//        while (getline(areaCodesFile, line, ',')) {
+//            allAreaCodes.insert(line);
+//            getline(areaCodesFile, line, ',');
+//            getline(areaCodesFile, line);
+//        }
+//    } catch (const std::ifstream::failure &e) {
+//        std::cout << "ERROR when opening areas.csv file" << std::endl;
+//    }
+//
     // Retrieve the areas argument like so:
     auto areasDataset = args["areas"].as<std::vector<std::string>>();
     if (!areasDataset.empty()) {
@@ -311,23 +311,36 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
             std::transform(area.begin(), area.end(), area.begin(), ::toupper);
         }
     }
-    //no areas arg provided: - return empty set.
-    if (areasDataset.empty()) {
-        return areas;
-    } else { //otherwise
-        for (auto &area : areasDataset) {
+//    //no areas arg provided: - return empty set.
+//    if (areasDataset.empty()) {
+//        return areas;
+//    } else { //otherwise
+//        for (auto &area : areasDataset) {
+//            if(area =="ALL"){
+//                areas.clear();
+//                break;
+//            }else{
+//                if(std::find(allAreaCodes.begin(), allAreaCodes.end(),area)!= allAreaCodes.end()){
+//                    areas.insert(area);
+//                }else{
+//                    throw std::invalid_argument("Invalid input for area argument");
+//                }
+//            }
+//        }
+//    }
+    for (auto &area : areasDataset) {
             if(area =="ALL"){
                 areas.clear();
                 break;
             }else{
-                if(std::find(allAreaCodes.begin(), allAreaCodes.end(),area)!= allAreaCodes.end()){
-                    areas.insert(area);
-                }else{
-                    throw std::invalid_argument("Invalid input for area argument");
-                }
+//                if(std::find(ares.begin(), allAreaCodes.end(),area)!= allAreaCodes.end()){
+//                    areas.insert(area);
+//                }else{
+//                    throw std::invalid_argument("Invalid input for area argument");
+//                }
+                areas.insert(area);
             }
         }
-    }
     return areas;
 }
 
@@ -356,6 +369,29 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
     std::invalid_argument if the argument contains an invalid measures value
     with the message: Invalid input for measures argument
 */
+std::unordered_set<std::string> BethYw::parseMeasuresArg(
+        cxxopts::ParseResult &args) {
+    // The unordered set you will return
+    std::unordered_set<std::string> measurements;
+
+    // Retrieve the measures argument like so:
+    auto measuresInput = args["measures"].as<std::vector<std::string>>();
+    if (!measuresInput.empty()) {
+        for (auto &measurement : measuresInput) {
+            std::transform(measurement.begin(), measurement.end(), measurement.begin(), ::tolower);
+        }
+    }
+    for (auto &measurement : measuresInput) {
+        if(measurement =="all"){
+            measurements.clear();
+            break;
+        }else{
+            measurements.insert(measurement);
+        }
+    }
+
+    return measurements;
+}
 
 
 /*
