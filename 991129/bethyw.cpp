@@ -65,10 +65,11 @@ int BethYw::run(int argc, char *argv[]) {
     std::string dir = args["dir"].as<std::string>() + DIR_SEP;
 
     // Parse other arguments and import data
-    // auto datasetsToImport = BethYw::parseDatasetsArg(args);
-    // auto areasFilter      = BethYw::parseAreasArg(args);
-    // auto measuresFilter   = BethYw::parseMeasuresArg(args);
-    // auto yearsFilter      = BethYw::parseYearsArg(args);
+     auto datasetsToImport = BethYw::parseDatasetsArg(args);
+     auto areasFilter      = BethYw::parseAreasArg(args);
+     auto measuresFilter   = BethYw::parseMeasuresArg(args);
+     auto yearsFilter      = BethYw::parseYearsArg(args);
+
 
     Areas data = Areas();
 
@@ -329,18 +330,18 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
 //        }
 //    }
     for (auto &area : areasDataset) {
-            if(area =="ALL"){
-                areas.clear();
-                break;
-            }else{
+        if (area == "ALL") {
+            areas.clear();
+            break;
+        } else {
 //                if(std::find(ares.begin(), allAreaCodes.end(),area)!= allAreaCodes.end()){
 //                    areas.insert(area);
 //                }else{
 //                    throw std::invalid_argument("Invalid input for area argument");
 //                }
-                areas.insert(area);
-            }
+            areas.insert(area);
         }
+    }
     return areas;
 }
 
@@ -382,10 +383,10 @@ std::unordered_set<std::string> BethYw::parseMeasuresArg(
         }
     }
     for (auto &measurement : measuresInput) {
-        if(measurement =="all"){
+        if (measurement == "all") {
             measurements.clear();
             break;
-        }else{
+        } else {
             measurements.insert(measurement);
         }
     }
@@ -417,7 +418,103 @@ std::unordered_set<std::string> BethYw::parseMeasuresArg(
     std::invalid_argument if the argument contains an invalid years value with
     the message: Invalid input for years argument
 */
+std::tuple<int, int> BethYw::parseYearsArg(cxxopts::ParseResult &args) {
+    //get the years argument:
+    std::tuple<int, int> years;
 
+    auto yearInput = args["years"].as<std::string>();
+    int year_one;
+    int year_two;
+    //Case: argument not set:
+    if (yearInput.empty()) {
+        //return <0,0>.
+        years = {0, 0};
+        return years;
+    }else if(yearInput.size() == 3 || yearInput.size() == 1){ // only case this is thrown is 0-0.
+        years = {0, 0};
+        return years;
+    }else if (yearInput.size() == 4) {
+        std::string year_one_as_string;
+        year_one_as_string = yearInput.substr(0, yearInput.find('-'));
+        if (!isNumber(year_one_as_string)) {
+            throw std::invalid_argument("Invalid input for years argument");
+        } else {
+            year_one = std::stoi(year_one_as_string);
+            years = {year_one, year_one};
+            return years;
+        }
+    } else if (yearInput.size() >4) {
+        std::string year_one_as_string;
+        year_one_as_string = yearInput.substr(0, yearInput.find('-'));
+        std::string year_two_as_string;
+        year_two_as_string = yearInput.substr(yearInput.find('-') + 1, yearInput.length());
+        if (!isNumber(year_one_as_string)) {
+            throw std::invalid_argument("Invalid input for years argument");
+        }
+        if(!isNumber(year_two_as_string)) {
+            throw std::invalid_argument("Invalid input for years argument");
+        } else {
+            year_one = std::stoi(year_one_as_string);
+            year_two = std::stoi(year_two_as_string);
+            years = {year_one, year_two};
+        }
+    } else if (yearInput.size() > 9) {
+        throw std::invalid_argument("Invalid input for years argument");
+    }
+
+
+
+////    we either get the first year or the only year.
+//    try {
+//        if (yearInput.find('-') != std::string::npos) {
+//            yearAsString = yearInput.substr(0, yearInput.find('-'));
+//        } else {
+//            yearAsString = yearInput;
+//        }
+//    } catch (std::invalid_argument &ia) {
+//        throw std::invalid_argument("Invalid input for years argument");
+//    }
+//
+//
+//    if (isNumber(yearAsString)) {
+//        year_one = std::stoi(yearAsString);
+//
+//        if (yearInput.length() == 4) {
+//            years = {year_one, year_one};
+//        }
+//
+//        if (year_one == 0) {
+//            years = {0, 0};
+//        }
+//
+//        if (yearInput.length() == 9) {
+//            std::string temp = yearInput.substr(
+//                    yearInput.find('-') + 1,
+//                    yearInput.length() - 1);
+//
+//            if (isNumber(temp)) {
+//                year_two = std::stoi(temp);
+//                years = {year_one, year_two};
+//            } else {
+//                throw std::invalid_argument("Invalid input for years argument");
+//            }
+//        }
+//    } else {
+//        throw std::invalid_argument("Invalid input for years argument");
+//    }
+//
+//
+//    //call function to check if the string is an integer.
+//
+    return years;
+}
+
+//Reference: https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
+bool BethYw::isNumber(const std::string &basicString) {
+    std::string::const_iterator it = basicString.begin();
+    while (it != basicString.end() && std::isdigit(*it)) ++it;
+    return !basicString.empty() && it == basicString.end();
+}
 
 /*
   TODO: BethYw::loadAreas(areas, dir, areasFilter)

@@ -62,6 +62,11 @@ std::unordered_set<std::string> parseAreasArg(cxxopts::ParseResult& args);
 
 std::unordered_set<std::string> parseMeasuresArg(cxxopts::ParseResult& args);
 
+std::tuple<int, int> parseYearsArg(cxxopts::ParseResult &args);
+
+    bool isNumber(const std::string& basicString);
+
+    bool isNumber(const std::string& basicString);
 } // namespace BethYw
 
 #endif // BETHYW_H_
