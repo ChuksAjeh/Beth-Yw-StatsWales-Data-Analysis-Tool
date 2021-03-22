@@ -249,7 +249,7 @@ std::vector<BethYw::InputFileSource> BethYw::parseDatasetsArg(
                 datasetsToImport.push_back(allDatasets[i]);
             }
         }
-    } catch (std::invalid_argument &e) {
+    } catch (const std::invalid_argument &e) {
         std::cout << "Stacktrace: " << e.what() << std::endl;
     }
 
