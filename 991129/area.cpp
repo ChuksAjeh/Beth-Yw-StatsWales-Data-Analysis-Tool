@@ -18,6 +18,8 @@
 */
 
 #include <stdexcept>
+#include <algorithm>
+#include <iostream>
 
 #include "area.h"
 
@@ -32,8 +34,8 @@
   @example
     Area("W06000023");
 */
-Area::Area(const std::string& localAuthorityCode) {
-  throw std::logic_error("Area::Area() has not been implemented!");
+Area::Area(const std::string& localAuthorityCode) : localAuthorityCode(localAuthorityCode)  {
+
 }
 
 /*
@@ -50,6 +52,9 @@ Area::Area(const std::string& localAuthorityCode) {
     ...
     auto authCode = area.getLocalAuthorityCode();
 */
+std::string Area::getLocalAuthorityCode() const {
+    return this->localAuthorityCode;
+}
 
 
 /*
@@ -59,7 +64,7 @@ Area::Area(const std::string& localAuthorityCode) {
   callable from a constant context and not modify the state of the instance.
 
   @param lang
-    A three-leter language code in ISO 639-3 format, e.g. cym or eng
+    A three-letter language code in ISO 639-3 format, e.g. cym or eng
 
   @return
     The name for the area in the given language
@@ -76,6 +81,13 @@ Area::Area(const std::string& localAuthorityCode) {
     ...
     auto name = area.getName(langCode);
 */
+std::string Area::getName(std::string lang) const{
+    try{
+        return this->names.at(lang);
+    }catch(std::out_of_range &e){
+        throw std::out_of_range("No name found for language: "+ lang);
+    }
+}
 
 
 /*
@@ -103,6 +115,18 @@ Area::Area(const std::string& localAuthorityCode) {
     std::string langValueWelsh = "Powys";
     area.setName(langCodeWelsh, langValueWelsh);
 */
+void Area::setName(std::string lang, std::string name) {
+    if (std::find_if(lang.begin(), lang.end(), ::isdigit) != lang.end()) {
+        throw std::invalid_argument("Area::setName: Language code must be three alphabetical letters only");
+    }
+    if (lang.length() != 3) {
+        throw std::invalid_argument("Area::setName: Language code must be three alphabetical letters only");
+    }
+    std::transform(lang.begin(), lang.end(), lang.begin(), ::tolower);
+    std::cout << "language: " << lang << std::endl;
+    std::cout << "name: " << name << std::endl;
+    this->names.insert(std::pair<std::string, std::string>(lang, name));
+}
 
 
 /*
@@ -127,8 +151,16 @@ Area::Area(const std::string& localAuthorityCode) {
     Measure measure("Pop", "Population");
     area.setMeasure("Pop", measure);
     ...
-    auto measure2 = area.getMeasure("pop");
+    auto measure2 = area.getMeasure("pop");****
 */
+Measure& Area::getMeasure(std::string key)const   {
+    if (this->measurements.find(key) == this->measurements.end()) {
+        throw std::out_of_range("No measure found matching " + key);
+    }
+    std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+    std::map<std::string, Measure> localMeasures = this->measurements;
+    return localMeasures.at(key);
+}
 
 
 /*
@@ -161,8 +193,17 @@ Area::Area(const std::string& localAuthorityCode) {
     double value = 12345678.9;
     measure.setValue(1999, value);
 
-    area.setMeasure(codename, measure);
+    area.setMeasure(codename, measure);*****
 */
+void Area::setMeasure(std::string codename, Measure measure) {
+    std::transform(codename.begin(), codename.end(), codename.begin(), ::tolower);
+    if (this->measurements.find(codename) == this->measurements.end()) {
+        this->measurements.insert({ codename, measure});
+    } else {
+        this->measurements.erase(codename);
+        this->measurements.insert({ codename, measure});
+    }
+}
 
 
 /*
@@ -188,6 +229,35 @@ Area::Area(const std::string& localAuthorityCode) {
     area.setMeasure(code, measure);
     auto size = area.size();
 */
+unsigned int Area::size() const {
+    return this->measurements.size();
+}
+
+Area::~Area() {
+
+}
+
+std::map<std::string, std::string> Area::getNames()  {
+    return std::map<std::string, std::string>();
+}
+
+std::map<std::string, Measure> Area::getMeasurements() const {
+    return std::map<std::string, Measure>();
+}
+
+bool Area::operator==(const Area &rhs) const {
+    return localAuthorityCode == rhs.localAuthorityCode &&
+           names == rhs.names &&
+           measurements == rhs.measurements;
+}
+
+bool Area::operator!=(const Area &rhs) const {
+    return !(rhs == *this);
+}
+
+
+
+
 
 
 /*

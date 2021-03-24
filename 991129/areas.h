@@ -51,8 +51,8 @@ using YearFilterTuple = std::tuple<unsigned int, unsigned int>;
   TODO: you should remove the declaration of the Null class below, and set
   AreasContainer to a valid Standard Library container of your choosing.
 */
-class Null { };
-using AreasContainer = Null;
+//class Null { };
+using AreasContainer = std::vector<Area>;
 
 /*
   Areas is a class that stores all the data categorised by area. The 
@@ -69,30 +69,38 @@ using AreasContainer = Null;
   to overload.
 */
 class Areas {
+private:
+    AreasContainer areasContainer;
 public:
-  Areas();
-  
-  void populateFromAuthorityCodeCSV(
-      std::istream& is,
-      const BethYw::SourceColumnMapping& cols,
-      const StringFilterSet * const areas = nullptr)
-      noexcept(false);
+    Areas();
 
-  void populate(
-      std::istream& is,
-      const BethYw::SourceDataType& type,
-      const BethYw::SourceColumnMapping& cols) noexcept(false);
+    void populateFromAuthorityCodeCSV(
+            std::istream &is,
+            const BethYw::SourceColumnMapping &cols,
+            const StringFilterSet *const areas = nullptr)
+    noexcept(false);
 
-  void populate(
-      std::istream& is,
-      const BethYw::SourceDataType& type,
-      const BethYw::SourceColumnMapping& cols,
-      const StringFilterSet * const areasFilter = nullptr,
-      const StringFilterSet * const measuresFilter = nullptr,
-      const YearFilterTuple * const yearsFilter = nullptr)
-      noexcept(false);
+    void populate(
+            std::istream &is,
+            const BethYw::SourceDataType &type,
+            const BethYw::SourceColumnMapping &cols) noexcept(false);
 
-  std::string toJSON() const;
+    void populate(
+            std::istream &is,
+            const BethYw::SourceDataType &type,
+            const BethYw::SourceColumnMapping &cols,
+            const StringFilterSet *const areasFilter = nullptr,
+            const StringFilterSet *const measuresFilter = nullptr,
+            const YearFilterTuple *const yearsFilter = nullptr)
+    noexcept(false);
+
+    void setArea(const std::string& localAuthorityCode, const Area& area);
+
+    const AreasContainer &getAreasContainer() const;
+
+    Area& getArea(std::string localAuthorityCode) const;
+    unsigned int size() const;
+    std::string toJSON() const;
 };
 
 #endif // AREAS_H

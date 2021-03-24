@@ -12,11 +12,12 @@
   Measure objects for a given local area, along with names for that area and a
   unique authority code.
 
-  TODO: Read the block comments with TODO in area.cpp to know which 
+  TODO: Read the block comments with TODO in area.cpp to know which
   functions and member variables you need to declare in this class.
  */
 
 #include <string>
+#include <map>
 
 #include "measure.h"
 
@@ -30,7 +31,26 @@
   to overload.
 */
 class Area {
-  Area(const std::string& localAuthorityCode);
+private:
+    const std::string &localAuthorityCode;
+    std::map<std::string,std::string> names;
+    std::map<std::string,Measure> measurements;
+public:
+    Area(const std::string &localAuthorityCode);
+    ~Area();
+    std::string getLocalAuthorityCode() const;
+    void setName(std::string lang, std::string name);
+    std::map<std::string, std::string> getNames();
+    std::string getName(std::string lang) const;
+    Measure& getMeasure(std::string key) const;
+    void setMeasure(std::string codename, Measure measure);
+    std::map<std::string, Measure> getMeasurements() const;
+    unsigned int size() const;
+
+    bool operator==(const Area &rhs) const;
+
+    bool operator!=(const Area &rhs) const;
+
 };
 
 #endif // AREA_H_
