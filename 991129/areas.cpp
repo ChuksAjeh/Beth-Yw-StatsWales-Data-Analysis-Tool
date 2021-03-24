@@ -44,8 +44,9 @@ using json = nlohmann::json;
   @example
     Areas data = Areas();
 */
-Areas::Areas() {
-  throw std::logic_error("Areas::Areas() has not been implemented!");
+//: areasContainer(std::vector<Area>())
+Areas::Areas() : areasContainer(std::vector<Area>()) {
+  //throw std::logic_error("Areas::Areas() has not been implemented!");
 }
 
 /*
@@ -73,6 +74,13 @@ Areas::Areas() {
     Area area(localAuthorityCode);
     data.setArea(localAuthorityCode, area);
 */
+void Areas::setArea(const std::string& localAuthorityCode, const Area& area){
+    for(auto& area : this->getAreasContainer()){
+        if(!area.getLocalAuthorityCode().compare(localAuthorityCode)){
+
+        }
+    }
+}
 
 
 /*
@@ -98,6 +106,15 @@ Areas::Areas() {
     ...
     Area area2 = areas.getArea("W06000023");
 */
+Area& Areas::getArea(std::string localAuthorityCode) const {
+    for(auto& curArea : this->getAreasContainer()){
+        if(curArea.getLocalAuthorityCode() == localAuthorityCode){
+            return const_cast<Area &>(curArea);
+        }
+    }
+    throw std::out_of_range("No area with local authority code: "
+    + localAuthorityCode + " exists");
+}
 
 
 /*
@@ -118,6 +135,9 @@ Areas::Areas() {
     
     auto size = areas.size(); // returns 1
 */
+unsigned int Areas::size() const {
+    return this->getAreasContainer().size();
+}
 
 
 /*
@@ -171,6 +191,7 @@ Areas::Areas() {
     std::runtime_error if a parsing error occurs (e.g. due to a malformed file)
     std::out_of_range if there are not enough columns in cols
 */
+//
 void Areas::populateFromAuthorityCodeCSV(
     std::istream &is,
     const BethYw::SourceColumnMapping &cols,
@@ -588,6 +609,10 @@ std::string Areas::toJSON() const {
   json j;
   
   return j.dump();
+}
+
+const AreasContainer &Areas::getAreasContainer() const {
+    return areasContainer;
 }
 
 /*

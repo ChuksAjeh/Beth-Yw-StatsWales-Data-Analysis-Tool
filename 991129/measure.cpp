@@ -10,17 +10,17 @@
 
   This file contains the implementation of the Measure class. Measure is a
   very simple class that needs to contain a few member variables for its name,
-  codename, and a Standard Library container for data. The data you need to 
-  store is values, organised by year. I'd recommend storing the values as 
+  codename, and a Standard Library container for data. The data you need to
+  store is values, organised by year. I'd recommend storing the values as
   doubles.
 
   This file contains numerous functions you must implement. Each function you
-  must implement has a TODO block comment. 
+  must implement has a TODO block comment.
 */
 
 #include <stdexcept>
 #include <string>
-
+#include <cmath>
 #include "measure.h"
 
 /*
@@ -28,7 +28,7 @@
 
   Construct a single Measure, that has values across many years.
 
-  All StatsWales JSON files have a codename for measures. You should convert 
+  All StatsWales JSON files have a codename for measures. You should convert
   all codenames to lowercase.
 
   @param codename
@@ -42,15 +42,17 @@
     std::string label = "Population";
     Measure measure(codename, label);
 */
-Measure::Measure(std::string codename, const std::string &label) {
-  throw std::logic_error("Measure::Measure() has not been implemented!");
+Measure::Measure(std::string codename, const std::string &label) : code(codename),
+                                                                   label(label),
+                                                                   readings(std::map<unsigned int, double>()) {
+    //throw std::logic_error("Measure::Measure() has not been implemented!");
 }
 
 /*
   TODO: Measure::getCodename()
 
-  Retrieve the code for the Measure. This function should be callable from a 
-  constant context and must promise to not modify the state of the instance or 
+  Retrieve the code for the Measure. This function should be callable from a
+  constant context and must promise to not modify the state of the instance or
   throw an exception.
 
   @return
@@ -65,13 +67,15 @@ Measure::Measure(std::string codename, const std::string &label) {
     ...
     auto codename2 = measure.getCodename();
 */
-
+const std::string &Measure::getCodename() const {
+    return code;
+}
 
 /*
   TODO: Measure::getLabel()
 
-  Retrieve the human-friendly label for the Measure. This function should be 
-  callable from a constant context and must promise to not modify the state of 
+  Retrieve the human-friendly label for the Measure. This function should be
+  callable from a constant context and must promise to not modify the state of
   the instance and to not throw an exception.
 
   @return
@@ -86,7 +90,9 @@ Measure::Measure(std::string codename, const std::string &label) {
     ...
     auto label = measure.getLabel();
 */
-
+const std::string &Measure::getLabel() const {
+    return this->label;
+}
 
 /*
   TODO: Measure::setLabel(label)
@@ -102,7 +108,9 @@ Measure::Measure(std::string codename, const std::string &label) {
     ...
     measure.setLabel("New Population");
 */
-
+void Measure::setLabel(const std::string &label) {
+    this->label = label;
+}
 
 /*
   TODO: Measure::getValue(key)
@@ -131,6 +139,25 @@ Measure::Measure(std::string codename, const std::string &label) {
     ...
     auto value = measure.getValue(1999); // returns 12345678.9
 */
+double Measure::getValue(unsigned int key) const {
+    if (this->readings.find(key) == this->readings.end()) {
+        throw std::out_of_range("No value found matching " + key);
+    }
+    std::map<unsigned int, double> values = this->getReadings();
+    return values.at(key);
+}
+
+const std::map<unsigned int, double> &Measure::getReadings() const {
+    return readings;
+}
+
+void Measure::setReadings(const std::map<unsigned int, double> &readings) {
+    Measure::readings = readings;
+}
+
+const std::string &Measure::getCode() const {
+    return code;
+}
 
 
 /*
@@ -155,6 +182,14 @@ Measure::Measure(std::string codename, const std::string &label) {
 
     measure.setValue(1999, 12345678.9);
 */
+void Measure::setValue(unsigned int key, double value) {
+    if (this->getReadings().find(key) == this->getReadings().end()) {
+        this->readings.insert({key, value});
+    } else {
+        this->readings.erase(key);
+        this->readings.insert({key, value});
+    }
+}
 
 
 /*
@@ -175,6 +210,9 @@ Measure::Measure(std::string codename, const std::string &label) {
     measure.setValue(1999, 12345678.9);
     auto size = measure.size(); // returns 1
 */
+unsigned int Measure::size() const {
+    return this->getReadings().size();
+}
 
 
 /*
@@ -194,12 +232,27 @@ Measure::Measure(std::string codename, const std::string &label) {
     measure.setValue(1999, 12345679.9);
     auto diff = measure.getDifference(); // returns 1.0
 */
+double Measure::getDifference() const {
+    if (this->getReadings().empty()) {
+        return 0.0;
+    } else {
+        double first = this->getReadings().begin()->second;
+
+        double second = std::prev(this->getReadings().end())->second;
+        double diff = (first - second);
+        if (diff < 0) {
+            return second - first;
+        } else {
+            return diff;
+        }
+    }
+}
 
 
 /*
   TODO: Measure::getDifferenceAsPercentage()
 
-  Calculate the difference between the first and last year imported as a 
+  Calculate the difference between the first and last year imported as a
   percentage. This function should be callable from a constant context and
   must promise to not change the state of the instance or throw an exception.
 
@@ -213,13 +266,18 @@ Measure::Measure(std::string codename, const std::string &label) {
     measure.setValue(2010, 12345679.9);
     auto diff = measure.getDifferenceAsPercentage();
 */
+double Measure::getDifferenceAsPercentage(){
+    double difference = this->getDifference();
+    return difference*100;
+
+}
 
 
 /*
   TODO: Measure::getAverage()
 
   Calculate the average/mean value for all the values. This function should be
-  callable from a constant context and must promise to not change the state of 
+  callable from a constant context and must promise to not change the state of
   the instance or throw an exception.
 
   @return
@@ -231,6 +289,34 @@ Measure::Measure(std::string codename, const std::string &label) {
     measure.setValue(1999, 12345679.9);
     auto diff = measure.getDifference(); // returns 1
 */
+double Measure::getAverage() const{
+    if(this->getReadings().size()==0){
+        return 0;
+    }
+    double total =0;
+    for(auto const& x : this->getReadings()){
+        total += x.second;
+    }
+    return total/this->getReadings().size();
+
+}
+
+Measure::~Measure() {
+
+}
+
+void Measure::setCodename(const std::string &code) {
+
+}
+
+const std::map<unsigned int, double> Measure::getReadings() {
+    return std::map<unsigned int, double>();
+}
+
+
+
+
+
 
 
 /*
@@ -247,7 +333,7 @@ Measure::Measure(std::string codename, const std::string &label) {
   value across the years, the difference between the first and last year,
   and the percentage difference between the first and last year.
 
-  If there is no data in this measure, print the name and code, and 
+  If there is no data in this measure, print the name and code, and
   on the next line print: <no data>
 
   See the coursework specification for more information.
@@ -269,7 +355,12 @@ Measure::Measure(std::string codename, const std::string &label) {
     measure.setValue(1999, 12345678.9);
     std::cout << measure << std::end;
 */
-
+std::ostream &operator<<(std::ostream &os, const Measure &measure) {
+    for(auto it = measure.readings.begin(); it!= measure.readings.end(); ++it){
+        os << "code: " << measure.code << " label: " << measure.label << " readings: " << it->first << it->second;
+    }
+    return os;
+}
 
 /*
   TODO: operator==(lhs, rhs)
@@ -287,4 +378,11 @@ Measure::Measure(std::string codename, const std::string &label) {
     true if both Measure objects have the same codename, label and data; false
     otherwise
 */
+bool operator==(const Measure &lhs, const Measure &rhs) {
+    return (lhs.code == rhs.code &&
+            lhs.label == rhs.label &&
+            lhs.readings == rhs.readings);
+}
+
+
 
