@@ -74,10 +74,9 @@ Areas::Areas() : areasContainer(std::vector<Area>()) {
     Area area(localAuthorityCode);
     data.setArea(localAuthorityCode, area);
 */
-void Areas::setArea(std::string &localAuthorityCode, Area area) {
+void Areas::setArea(std::string localAuthorityCode, Area area) {
     bool matchFound = false;
-    for (auto it = this->areasContainer.begin(); it != this->areasContainer.end(); it++) {
-        auto &currentArea = *it;
+    for (auto & currentArea : this->areasContainer) {
         //we find an area with the this localAuth code: update values if found
         if (currentArea.getLocalAuthorityCode() == localAuthorityCode) {
             matchFound = true;
@@ -90,10 +89,8 @@ void Areas::setArea(std::string &localAuthorityCode, Area area) {
             for(auto& x : currentArea.getMeasurements()){
                 area.setMeasure(x.first, x.second);
             }
-            this->areasContainer.push_back(area);
+            //this->areasContainer.push_back(area);
         }
-
-
     }
     if (!matchFound) {
         std::cout <<"Push New Area!" <<std::endl;

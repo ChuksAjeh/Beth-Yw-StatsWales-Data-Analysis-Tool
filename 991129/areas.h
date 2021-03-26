@@ -95,7 +95,7 @@ public:
     noexcept(false);
 
     const AreasContainer &getAreasContainer() const;
-    void setArea(std::string& localAuthorityCode, Area area);
+    void setArea(std::string localAuthorityCode, Area area);
     Area& getArea(const std::string& localAuthorityCode)  ;
     unsigned int size() const;
     std::string toJSON() const;
