@@ -52,8 +52,8 @@ Area::Area(const std::string& localAuthorityCode) : localAuthorityCode(localAuth
     ...
     auto authCode = area.getLocalAuthorityCode();
 */
-std::string Area::getLocalAuthorityCode() const {
-    return this->localAuthorityCode;
+const std::string &Area::getLocalAuthorityCode() const {
+    return localAuthorityCode;
 }
 
 
@@ -123,8 +123,7 @@ void Area::setName(std::string lang, std::string name) {
         throw std::invalid_argument("Area::setName: Language code must be three alphabetical letters only");
     }
     std::transform(lang.begin(), lang.end(), lang.begin(), ::tolower);
-    std::cout << "language: " << lang << std::endl;
-    std::cout << "name: " << name << std::endl;
+
     this->names.insert(std::pair<std::string, std::string>(lang, name));
 }
 
@@ -153,7 +152,7 @@ void Area::setName(std::string lang, std::string name) {
     ...
     auto measure2 = area.getMeasure("pop");****
 */
-Measure& Area::getMeasure(std::string key)const   {
+Measure& Area::getMeasure(std::string key)  const {
     if (this->measurements.find(key) == this->measurements.end()) {
         throw std::out_of_range("No measure found matching " + key);
     }
@@ -233,27 +232,23 @@ unsigned int Area::size() const {
     return this->measurements.size();
 }
 
-Area::~Area() {
-
+const std::map<std::string, std::string> &Area::getNames()  {
+    return names;
 }
 
-std::map<std::string, std::string> Area::getNames()  {
-    return std::map<std::string, std::string>();
+void Area::setNames(const std::map<std::string, std::string> &names) {
+    Area::names = names;
 }
 
-std::map<std::string, Measure> Area::getMeasurements() const {
-    return std::map<std::string, Measure>();
+const std::map<std::string, Measure> &Area::getMeasurements()  {
+    return measurements;
 }
 
-bool Area::operator==(const Area &rhs) const {
-    return localAuthorityCode == rhs.localAuthorityCode &&
-           names == rhs.names &&
-           measurements == rhs.measurements;
+void Area::setMeasurements(const std::map<std::string, Measure> &measurements) {
+    Area::measurements = measurements;
 }
 
-bool Area::operator!=(const Area &rhs) const {
-    return !(rhs == *this);
-}
+
 
 
 
@@ -316,3 +311,8 @@ bool Area::operator!=(const Area &rhs) const {
 
     bool eq = area1 == area2;
 */
+// bool Area::operator==(Area &lhs , const Area &rhs) {
+//    return lhs.localAuthorityCode == rhs.localAuthorityCode &&
+//           lhs.names == rhs.names &&
+//           lhs.measurements == rhs.measurements;
+//}

@@ -9,11 +9,17 @@
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/area.cpp
 stdexcept
 -
+algorithm
+-
+iostream
+-
 area.h
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/area.h
 
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/area.h
 string
+-
+map
 -
 measure.h
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/measure.h
@@ -95,6 +101,8 @@ unordered_map
 -
 
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/input.cpp
+iostream
+-
 input.h
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/input.h
 
@@ -1047,11 +1055,17 @@ stdexcept
 -
 string
 -
+cmath
+-
 measure.h
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/measure.h
 
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/measure.h
 string
+-
+map
+-
+ostream
 -
 
 C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test1.cpp

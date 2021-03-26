@@ -46,7 +46,7 @@ using json = nlohmann::json;
 */
 //: areasContainer(std::vector<Area>())
 Areas::Areas() : areasContainer(std::vector<Area>()) {
-  //throw std::logic_error("Areas::Areas() has not been implemented!");
+    //throw std::logic_error("Areas::Areas() has not been implemented!");
 }
 
 /*
@@ -74,11 +74,30 @@ Areas::Areas() : areasContainer(std::vector<Area>()) {
     Area area(localAuthorityCode);
     data.setArea(localAuthorityCode, area);
 */
-void Areas::setArea(const std::string& localAuthorityCode, const Area& area){
-    for(auto& area : this->getAreasContainer()){
-        if(!area.getLocalAuthorityCode().compare(localAuthorityCode)){
+void Areas::setArea(std::string &localAuthorityCode, Area area) {
+    bool matchFound = false;
+    for (auto it = this->areasContainer.begin(); it != this->areasContainer.end(); it++) {
+        auto &currentArea = *it;
+        //we find an area with the this localAuth code: update values if found
+        if (currentArea.getLocalAuthorityCode() == localAuthorityCode) {
+            matchFound = true;
+            //std::map<std::string, std::string> oldAreaNames = currentArea.getNames();
+            for(auto& x : currentArea.getNames()){
+                area.setName(x.first, x.second);
+            }
 
+            //std::map<std::string, Measure> oldAreaMeasures = currentArea.getMeasurements();
+            for(auto& x : currentArea.getMeasurements()){
+                area.setMeasure(x.first, x.second);
+            }
+            this->areasContainer.push_back(area);
         }
+
+
+    }
+    if (!matchFound) {
+        std::cout <<"Push New Area!" <<std::endl;
+        this->areasContainer.push_back(area);
     }
 }
 
@@ -106,14 +125,14 @@ void Areas::setArea(const std::string& localAuthorityCode, const Area& area){
     ...
     Area area2 = areas.getArea("W06000023");
 */
-Area& Areas::getArea(std::string localAuthorityCode) const {
-    for(auto& curArea : this->getAreasContainer()){
-        if(curArea.getLocalAuthorityCode() == localAuthorityCode){
-            return const_cast<Area &>(curArea);
+Area &Areas::getArea(const std::string &localAuthorityCode) {
+    for (auto it = this->areasContainer.begin(); it != this->areasContainer.end(); it++) {
+        auto &currentArea = *it;
+        if (currentArea.getLocalAuthorityCode() == localAuthorityCode) {
+            return currentArea;
         }
     }
-    throw std::out_of_range("No area with local authority code: "
-    + localAuthorityCode + " exists");
+    throw std::out_of_range("No area with local authority code: " + localAuthorityCode + " exists");
 }
 
 
@@ -193,11 +212,11 @@ unsigned int Areas::size() const {
 */
 //
 void Areas::populateFromAuthorityCodeCSV(
-    std::istream &is,
-    const BethYw::SourceColumnMapping &cols,
-    const StringFilterSet * const areasFilter) {
-  throw std::logic_error(
-    "Areas::populateFromAuthorityCodeCSV() has not been implemented!");
+        std::istream &is,
+        const BethYw::SourceColumnMapping &cols,
+        const StringFilterSet *const areasFilter) {
+    throw std::logic_error(
+            "Areas::populateFromAuthorityCodeCSV() has not been implemented!");
 }
 
 /*
@@ -428,11 +447,11 @@ void Areas::populateFromAuthorityCodeCSV(
 void Areas::populate(std::istream &is,
                      const BethYw::SourceDataType &type,
                      const BethYw::SourceColumnMapping &cols) {
-  if (type == BethYw::AuthorityCodeCSV) {
-    populateFromAuthorityCodeCSV(is, cols);
-  } else {
-    throw std::runtime_error("Areas::populate: Unexpected data type");
-  }
+    if (type == BethYw::AuthorityCodeCSV) {
+        populateFromAuthorityCodeCSV(is, cols);
+    } else {
+        throw std::runtime_error("Areas::populate: Unexpected data type");
+    }
 }
 
 /*
@@ -518,18 +537,17 @@ void Areas::populate(std::istream &is,
       &yearsFilter);
 */
 void Areas::populate(
-    std::istream &is,
-    const BethYw::SourceDataType &type,
-    const BethYw::SourceColumnMapping &cols,
-    const StringFilterSet * const areasFilter,
-    const StringFilterSet * const measuresFilter,
-    const YearFilterTuple * const yearsFilter)
-     {
-  if (type == BethYw::AuthorityCodeCSV) {
-    populateFromAuthorityCodeCSV(is, cols, areasFilter);
-  } else {
-    throw std::runtime_error("Areas::populate: Unexpected data type");
-  }
+        std::istream &is,
+        const BethYw::SourceDataType &type,
+        const BethYw::SourceColumnMapping &cols,
+        const StringFilterSet *const areasFilter,
+        const StringFilterSet *const measuresFilter,
+        const YearFilterTuple *const yearsFilter) {
+    if (type == BethYw::AuthorityCodeCSV) {
+        populateFromAuthorityCodeCSV(is, cols, areasFilter);
+    } else {
+        throw std::runtime_error("Areas::populate: Unexpected data type");
+    }
 }
 
 /*
@@ -606,14 +624,16 @@ void Areas::populate(
     std::cout << data.toJSON();
 */
 std::string Areas::toJSON() const {
-  json j;
-  
-  return j.dump();
+    json j;
+
+    return j.dump();
 }
 
 const AreasContainer &Areas::getAreasContainer() const {
     return areasContainer;
 }
+
+
 
 /*
   TODO: operator<<(os, areas)

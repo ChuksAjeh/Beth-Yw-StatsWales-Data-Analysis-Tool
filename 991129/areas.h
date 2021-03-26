@@ -94,13 +94,13 @@ public:
             const YearFilterTuple *const yearsFilter = nullptr)
     noexcept(false);
 
-    void setArea(const std::string& localAuthorityCode, const Area& area);
-
     const AreasContainer &getAreasContainer() const;
-
-    Area& getArea(std::string localAuthorityCode) const;
+    void setArea(std::string& localAuthorityCode, Area area);
+    Area& getArea(const std::string& localAuthorityCode)  ;
     unsigned int size() const;
     std::string toJSON() const;
+    void copyNames(std::map<std::string , std::string> oldNameList,
+                   std::map<std::string , std::string> newNameList);
 };
 
 #endif // AREAS_H
