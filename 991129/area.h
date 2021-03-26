@@ -52,7 +52,7 @@ public:
 
     unsigned int size() const;
 
-    //friend bool operator== (Area &lhs, const Area &rhs);
+    friend bool operator== (const Area &lhs, const Area &rhs);
 
 
 

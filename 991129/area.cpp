@@ -263,8 +263,8 @@ void Area::setMeasurements(const std::map<std::string, Measure> &measurements) {
     Area area2("MYCODE1");
     bool eq = area1 == area2;
 */
-// bool Area::operator==(Area &lhs , const Area &rhs) {
-//    return lhs.localAuthorityCode == rhs.localAuthorityCode &&
-//           lhs.names == rhs.names &&
-//           lhs.measurements == rhs.measurements;
-//}
+ bool operator==(const Area &lhs , const Area &rhs) {
+    return lhs.localAuthorityCode == rhs.localAuthorityCode &&
+           lhs.names == rhs.names &&
+           lhs.measurements == rhs.measurements;
+}
