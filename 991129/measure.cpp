@@ -313,12 +313,6 @@ const std::map<unsigned int, double> Measure::getReadings() {
     return std::map<unsigned int, double>();
 }
 
-
-
-
-
-
-
 /*
   TODO: operator<<(os, measure)
 
@@ -355,6 +349,7 @@ const std::map<unsigned int, double> Measure::getReadings() {
     measure.setValue(1999, 12345678.9);
     std::cout << measure << std::end;
 */
+//reference: https://riptutorial.com/cplusplus/example/7878/map-iterator 25/03/2021 00:00
 std::ostream &operator<<(std::ostream &os, const Measure &measure) {
     for(auto it = measure.readings.begin(); it!= measure.readings.end(); ++it){
         os << "code: " << measure.code << " label: " << measure.label << " readings: " << it->first << it->second;

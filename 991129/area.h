@@ -37,19 +37,28 @@ private:
     std::map<std::string,Measure> measurements;
 public:
     Area(const std::string &localAuthorityCode);
-    ~Area();
-    std::string getLocalAuthorityCode() const;
+
+    const std::string &getLocalAuthorityCode() const;
+
     void setName(std::string lang, std::string name);
-    std::map<std::string, std::string> getNames();
+
     std::string getName(std::string lang) const;
     Measure& getMeasure(std::string key) const;
     void setMeasure(std::string codename, Measure measure);
-    std::map<std::string, Measure> getMeasurements() const;
+
+    const std::map<std::string, std::string> &getNames() ;
+
+    void setNames(const std::map<std::string, std::string> &names);
+
+    const std::map<std::string, Measure> &getMeasurements();
+
+    void setMeasurements(const std::map<std::string, Measure> &measurements);
+
     unsigned int size() const;
 
-    bool operator==(const Area &rhs) const;
+    //friend bool operator== (Area &lhs, const Area &rhs);
 
-    bool operator!=(const Area &rhs) const;
+
 
 };
 
