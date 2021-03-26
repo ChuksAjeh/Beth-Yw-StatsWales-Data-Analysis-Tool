@@ -5,13 +5,10 @@
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
   +---------------------------------------+
-
   AUTHOR: <991129>
-
   This file contains the Area class declaration. Area objects contain all the
   Measure objects for a given local area, along with names for that area and a
   unique authority code.
-
   TODO: Read the block comments with TODO in area.cpp to know which
   functions and member variables you need to declare in this class.
  */
@@ -25,7 +22,6 @@
   An Area object consists of a unique authority code, a container for names
   for the area in any number of different languages, and a container for the
   Measures objects.
-
   TODO: Based on your implementation, there may be additional constructors
   or functions you implement here, and perhaps additional operators you may wish
   to overload.
@@ -43,7 +39,7 @@ public:
     void setName(std::string lang, std::string name);
 
     std::string getName(std::string lang) ;
-    Measure& getMeasure(std::string key) ;
+    Measure &getMeasure(std::string key) ;
     void setMeasure(std::string codename, Measure measure);
 
     const std::map<std::string, std::string> &getNames() const ;
