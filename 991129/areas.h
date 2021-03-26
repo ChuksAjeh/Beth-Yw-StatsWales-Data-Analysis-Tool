@@ -52,7 +52,7 @@ using YearFilterTuple = std::tuple<unsigned int, unsigned int>;
   AreasContainer to a valid Standard Library container of your choosing.
 */
 //class Null { };
-using AreasContainer = std::vector<Area>;
+using AreasContainer = std::map<std::string,Area>;
 
 /*
   Areas is a class that stores all the data categorised by area. The 
@@ -94,13 +94,14 @@ public:
             const YearFilterTuple *const yearsFilter = nullptr)
     noexcept(false);
 
+
+
     const AreasContainer &getAreasContainer() const;
-    void setArea(std::string localAuthorityCode, Area area);
+    void setArea(const std::string& localAuthorityCode, Area area);
     Area& getArea(const std::string& localAuthorityCode)  ;
     unsigned int size() const;
     std::string toJSON() const;
-    void copyNames(std::map<std::string , std::string> oldNameList,
-                   std::map<std::string , std::string> newNameList);
+
 };
 
 #endif // AREAS_H

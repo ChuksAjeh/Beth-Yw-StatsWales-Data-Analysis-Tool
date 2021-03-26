@@ -45,7 +45,7 @@ using json = nlohmann::json;
     Areas data = Areas();
 */
 //: areasContainer(std::vector<Area>())
-Areas::Areas() : areasContainer(std::vector<Area>()) {
+Areas::Areas() : areasContainer(std::map<std::string,Area>()) {
     //throw std::logic_error("Areas::Areas() has not been implemented!");
 }
 
@@ -74,27 +74,35 @@ Areas::Areas() : areasContainer(std::vector<Area>()) {
     Area area(localAuthorityCode);
     data.setArea(localAuthorityCode, area);
 */
-void Areas::setArea(std::string localAuthorityCode, Area area) {
-    bool matchFound = false;
-    for (auto & currentArea : this->areasContainer) {
-        //we find an area with the this localAuth code: update values if found
-        if (currentArea.getLocalAuthorityCode() == localAuthorityCode) {
-            matchFound = true;
-            //std::map<std::string, std::string> oldAreaNames = currentArea.getNames();
-            for(auto& x : currentArea.getNames()){
-                area.setName(x.first, x.second);
-            }
+void Areas::setArea(const std::string& localAuthorityCode, Area area) {
+    //we find an area with the this localAuth code: update values if found
+    if (areasContainer.find(localAuthorityCode) != areasContainer.end()) {
+        Area newArea(localAuthorityCode);
 
-            //std::map<std::string, Measure> oldAreaMeasures = currentArea.getMeasurements();
-            for(auto& x : currentArea.getMeasurements()){
-                area.setMeasure(x.first, x.second);
-            }
-            //this->areasContainer.push_back(area);
-        }
-    }
-    if (!matchFound) {
-        std::cout <<"Push New Area!" <<std::endl;
-        this->areasContainer.push_back(area);
+        //loop through objs of Areas in the Area container
+//        for(auto &x:this->areasContainer){
+//            //current Area list of Names
+//            std::map<std::string, std::string> oldAreaNames = x.second.getNames();
+//            //go through every name in the current Area list of names
+//            for (auto &y : oldAreaNames) {
+//                newArea.setName(y.first, y.second);
+//            }
+//            for (auto &y : area.getNames()) {
+//                newArea.setName(y.first, y.second);
+//            }
+//        }
+        std::map<std::string, std::string> commonAreaNames = area.getNames();
+        commonAreaNames.insert(areasContainer.find(localAuthorityCode)->second.getNames().begin(),
+                               areasContainer.find(localAuthorityCode)->second.getNames().end());
+        std::map<std::string, Measure> commonAreaMeasurements = area.getMeasurements();
+        commonAreaMeasurements.insert(areasContainer.find(localAuthorityCode)->second.getMeasurements().begin(),
+                               areasContainer.find(localAuthorityCode)->second.getMeasurements().end());
+
+        areasContainer.find(localAuthorityCode)->second.setNames(commonAreaNames);
+        areasContainer.find(localAuthorityCode)->second.setMeasurements(commonAreaMeasurements);
+    } else {
+        //std::cout << "Push New Area!" << std::endl;
+        this->areasContainer.insert(std::pair<std::string, Area>(localAuthorityCode, area));
     }
 }
 
@@ -123,11 +131,9 @@ void Areas::setArea(std::string localAuthorityCode, Area area) {
     Area area2 = areas.getArea("W06000023");
 */
 Area &Areas::getArea(const std::string &localAuthorityCode) {
-    for (auto it = this->areasContainer.begin(); it != this->areasContainer.end(); it++) {
-        auto &currentArea = *it;
-        if (currentArea.getLocalAuthorityCode() == localAuthorityCode) {
-            return currentArea;
-        }
+    if (this->areasContainer.find(localAuthorityCode) != this->areasContainer.end()) {
+        //std::cout << currentArea.getLocalAuthorityCode() << std::endl;
+        return this->areasContainer.find(localAuthorityCode)->second;
     }
     throw std::out_of_range("No area with local authority code: " + localAuthorityCode + " exists");
 }
@@ -631,7 +637,6 @@ const AreasContainer &Areas::getAreasContainer() const {
 }
 
 
-
 /*
   TODO: operator<<(os, areas)
 
@@ -738,5 +743,10 @@ const AreasContainer &Areas::getAreasContainer() const {
     Areas areas();
     std::cout << areas << std::end;
 */
-
+//std::ostream &operator<<(std::ostream &os, const Areas &areas) {
+//    for (auto it = measure.readings.begin(); it != areas.getAreasContainer(); ++it) {
+//        os << "code: " << measure.code << " label: " << measure.label << " readings: " << it->first << it->second;
+//    }
+//    return os;
+//}
 
