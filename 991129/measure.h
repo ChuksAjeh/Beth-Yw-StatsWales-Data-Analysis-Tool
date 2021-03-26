@@ -46,7 +46,7 @@ public:
     const std::map<unsigned int, double> getReadings();
     void setReadings(const std::map<unsigned int, double> &readings);
     unsigned int size() const;
-    double getValue(unsigned int key) const;
+    double& getValue(unsigned int key) const;
     double getDifference() const;
     void setValue(unsigned int key, double value);
     double getDifferenceAsPercentage();

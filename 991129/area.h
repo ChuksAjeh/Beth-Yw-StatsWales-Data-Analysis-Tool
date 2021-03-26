@@ -42,11 +42,11 @@ public:
 
     void setName(std::string lang, std::string name);
 
-    std::string getName(std::string lang) const;
-    Measure& getMeasure(std::string key) const;
+    std::string getName(std::string lang) ;
+    Measure& getMeasure(std::string key) ;
     void setMeasure(std::string codename, Measure measure);
 
-    const std::map<std::string, std::string> &getNames() ;
+    const std::map<std::string, std::string> &getNames() const ;
 
     void setNames(const std::map<std::string, std::string> &names);
 

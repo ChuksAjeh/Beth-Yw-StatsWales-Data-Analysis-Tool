@@ -139,7 +139,7 @@ void Measure::setLabel(const std::string &label) {
     ...
     auto value = measure.getValue(1999); // returns 12345678.9
 */
-double Measure::getValue(unsigned int key) const {
+double& Measure::getValue(unsigned int key) const {
     if (this->readings.find(key) == this->readings.end()) {
         throw std::out_of_range("No value found matching " + key);
     }
