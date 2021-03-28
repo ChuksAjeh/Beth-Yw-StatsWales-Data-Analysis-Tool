@@ -65,10 +65,10 @@ int BethYw::run(int argc, char *argv[]) {
     std::string dir = args["dir"].as<std::string>() + DIR_SEP;
 
     // Parse other arguments and import data
-     auto datasetsToImport = BethYw::parseDatasetsArg(args);
-     auto areasFilter      = BethYw::parseAreasArg(args);
-     auto measuresFilter   = BethYw::parseMeasuresArg(args);
-     auto yearsFilter      = BethYw::parseYearsArg(args);
+    auto datasetsToImport = BethYw::parseDatasetsArg(args);
+    auto areasFilter = BethYw::parseAreasArg(args);
+    auto measuresFilter = BethYw::parseMeasuresArg(args);
+    auto yearsFilter = BethYw::parseYearsArg(args);
 
 
     Areas data = Areas();
@@ -430,10 +430,10 @@ std::tuple<int, int> BethYw::parseYearsArg(cxxopts::ParseResult &args) {
         //return <0,0>.
         years = {0, 0};
         return years;
-    }else if(yearInput.size() == 3 || yearInput.size() == 1){ // only case this is thrown is 0-0.
+    } else if (yearInput.size() == 3 || yearInput.size() == 1) { // only case this is thrown is 0-0.
         years = {0, 0};
         return years;
-    }else if (yearInput.size() == 4) {
+    } else if (yearInput.size() == 4) {
         std::string year_one_as_string;
         year_one_as_string = yearInput.substr(0, yearInput.find('-'));
         if (!isNumber(year_one_as_string)) {
@@ -443,7 +443,7 @@ std::tuple<int, int> BethYw::parseYearsArg(cxxopts::ParseResult &args) {
             years = {year_one, year_one};
             return years;
         }
-    } else if (yearInput.size() >4) {
+    } else if (yearInput.size() > 4) {
         std::string year_one_as_string;
         year_one_as_string = yearInput.substr(0, yearInput.find('-'));
         std::string year_two_as_string;
@@ -451,7 +451,7 @@ std::tuple<int, int> BethYw::parseYearsArg(cxxopts::ParseResult &args) {
         if (!isNumber(year_one_as_string)) {
             throw std::invalid_argument("Invalid input for years argument");
         }
-        if(!isNumber(year_two_as_string)) {
+        if (!isNumber(year_two_as_string)) {
             throw std::invalid_argument("Invalid input for years argument");
         } else {
             year_one = std::stoi(year_one_as_string);
@@ -551,6 +551,16 @@ bool BethYw::isNumber(const std::string &basicString) {
 
     BethYw::loadAreas(areas, "data", BethYw::parseAreasArg(args));
 */
+void loadAreas(Areas &areas, std::string dir,
+                  std::unordered_set<std::string> areasFilter) {
+
+    InputFile temp(dir + BethYw::InputFiles::AREAS.FILE);
+    BethYw::SourceColumnMapping column = BethYw::InputFiles::AREAS.COLS;
+    BethYw::SourceDataType type = BethYw::InputFiles::AREAS.PARSER;
+    std::istream &data_is_open = temp.open();
+    areas.populate(data_is_open, type, column, &areasFilter);
+
+}
 
 
 /*
@@ -565,7 +575,7 @@ bool BethYw::isNumber(const std::string &basicString) {
   filtering them with the `areasFilter`, `measuresFilter`, and `yearsFilter`.
 
   The actual filtering will be done by the Areas::populate() function, thus 
-  you need to merely pass pointers on to these flters.
+  you need to merely pass pointers on to these filters.
 
   This function should promise not to throw an exception. If there is an
   error/exception thrown in any function called by thus function, catch it and
@@ -607,6 +617,15 @@ bool BethYw::isNumber(const std::string &basicString) {
       BethYw::parseMeasuresArg(args),
       BethYw::parseYearsArg(args));
 */
-
-
+void loadDatasets(Areas &areas, std::string dir, std::vector<BethYw::InputFileSource> datasetsToImport,
+                  std::unordered_set<std::string> areasFilter, std::unordered_set<std::string> measuresFilter,
+                  std::tuple<unsigned int, unsigned int> yearsFilter) {
+    for (auto &x: datasetsToImport) {
+        InputFile temp(dir + x.FILE);
+        BethYw::SourceColumnMapping column = x.COLS;
+        BethYw::SourceDataType type = x.PARSER;
+        std::istream &data_is_open = temp.open();
+        areas.populate(data_is_open, type, column, &areasFilter, &measuresFilter, &yearsFilter);
+    }
+}
 

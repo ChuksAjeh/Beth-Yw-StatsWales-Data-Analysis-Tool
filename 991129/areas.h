@@ -40,6 +40,7 @@
 */
 using StringFilterSet = std::unordered_set<std::string>;
 
+
 /*
   An alias for a year filter.
 */
@@ -89,10 +90,7 @@ public:
     )
     noexcept(false);
 
-    void populate(
-            std::istream &is,
-            const BethYw::SourceDataType &type,
-            const BethYw::SourceColumnMapping &cols) noexcept(false);
+
 
     void populate(
             std::istream &is,
@@ -103,6 +101,12 @@ public:
             const YearFilterTuple *const yearsFilter = nullptr)
     noexcept(false);
 
+    void populateFromWelshStatsJSON(std::istream &is,
+                                           const BethYw::SourceColumnMapping &cols,
+                                           const StringFilterSet *const areasFilter = nullptr,
+                                           const StringFilterSet *const measuresFilter =nullptr,
+                                           const YearFilterTuple *const yearsFilter =nullptr)
+                                           noexcept(false);
 
     const AreasContainer &getAreasContainer() const;
 
@@ -113,6 +117,7 @@ public:
     unsigned int size() const;
 
     std::string toJSON() const;
+
 
 };
 
