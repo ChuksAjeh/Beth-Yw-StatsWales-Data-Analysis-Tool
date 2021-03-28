@@ -52,7 +52,7 @@ using YearFilterTuple = std::tuple<unsigned int, unsigned int>;
   AreasContainer to a valid Standard Library container of your choosing.
 */
 //class Null { };
-using AreasContainer = std::map<std::string,Area>;
+using AreasContainer = std::map<std::string, Area>;
 
 /*
   Areas is a class that stores all the data categorised by area. The 
@@ -80,6 +80,15 @@ public:
             const StringFilterSet *const areas = nullptr)
     noexcept(false);
 
+    void populateFromAuthorityByYearCSV(
+            std::istream &is,
+            const BethYw::SourceColumnMapping &cols,
+            const StringFilterSet *const areasFilter = nullptr,
+            const StringFilterSet *const measuresFilter = nullptr,
+            const YearFilterTuple *const yearsFilter = nullptr
+    )
+    noexcept(false);
+
     void populate(
             std::istream &is,
             const BethYw::SourceDataType &type,
@@ -95,11 +104,14 @@ public:
     noexcept(false);
 
 
-
     const AreasContainer &getAreasContainer() const;
-    void setArea(const std::string& localAuthorityCode, Area area);
-    Area& getArea(const std::string& localAuthorityCode)  ;
+
+    void setArea(const std::string &localAuthorityCode, Area area);
+
+    Area &getArea(const std::string &localAuthorityCode);
+
     unsigned int size() const;
+
     std::string toJSON() const;
 
 };

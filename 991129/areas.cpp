@@ -24,6 +24,7 @@
 #include <stdexcept>
 #include <tuple>
 #include <unordered_set>
+#include <sstream>
 
 #include "lib_json.hpp"
 
@@ -45,7 +46,7 @@ using json = nlohmann::json;
     Areas data = Areas();
 */
 //: areasContainer(std::vector<Area>())
-Areas::Areas() : areasContainer(std::map<std::string,Area>()) {
+Areas::Areas() : areasContainer(std::map<std::string, Area>()) {
     //throw std::logic_error("Areas::Areas() has not been implemented!");
 }
 
@@ -74,34 +75,20 @@ Areas::Areas() : areasContainer(std::map<std::string,Area>()) {
     Area area(localAuthorityCode);
     data.setArea(localAuthorityCode, area);
 */
-void Areas::setArea(const std::string& localAuthorityCode, Area area) {
+void Areas::setArea(const std::string &localAuthorityCode, Area area) {
     //we find an area with the this localAuth code: update values if found
     if (areasContainer.find(localAuthorityCode) != areasContainer.end()) {
         Area newArea(localAuthorityCode);
-
-        //loop through objs of Areas in the Area container
-//        for(auto &x:this->areasContainer){
-//            //current Area list of Names
-//            std::map<std::string, std::string> oldAreaNames = x.second.getNames();
-//            //go through every name in the current Area list of names
-//            for (auto &y : oldAreaNames) {
-//                newArea.setName(y.first, y.second);
-//            }
-//            for (auto &y : area.getNames()) {
-//                newArea.setName(y.first, y.second);
-//            }
-//        }
         std::map<std::string, std::string> commonAreaNames = area.getNames();
         commonAreaNames.insert(areasContainer.find(localAuthorityCode)->second.getNames().begin(),
                                areasContainer.find(localAuthorityCode)->second.getNames().end());
         std::map<std::string, Measure> commonAreaMeasurements = area.getMeasurements();
         commonAreaMeasurements.insert(areasContainer.find(localAuthorityCode)->second.getMeasurements().begin(),
-                               areasContainer.find(localAuthorityCode)->second.getMeasurements().end());
+                                      areasContainer.find(localAuthorityCode)->second.getMeasurements().end());
 
         areasContainer.find(localAuthorityCode)->second.setNames(commonAreaNames);
         areasContainer.find(localAuthorityCode)->second.setMeasurements(commonAreaMeasurements);
     } else {
-        //std::cout << "Push New Area!" << std::endl;
         this->areasContainer.insert(std::pair<std::string, Area>(localAuthorityCode, area));
     }
 }
@@ -135,7 +122,7 @@ Area &Areas::getArea(const std::string &localAuthorityCode) {
         //std::cout << currentArea.getLocalAuthorityCode() << std::endl;
         return this->areasContainer.find(localAuthorityCode)->second;
     }
-    throw std::out_of_range("No area with local authority code: " + localAuthorityCode + " exists");
+    throw std::out_of_range("No area found matching " + localAuthorityCode);
 }
 
 
@@ -214,12 +201,37 @@ unsigned int Areas::size() const {
     std::out_of_range if there are not enough columns in cols
 */
 //
-void Areas::populateFromAuthorityCodeCSV(
-        std::istream &is,
-        const BethYw::SourceColumnMapping &cols,
-        const StringFilterSet *const areasFilter) {
-    throw std::logic_error(
-            "Areas::populateFromAuthorityCodeCSV() has not been implemented!");
+void Areas::populateFromAuthorityCodeCSV(std::istream &is, const BethYw::SourceColumnMapping &cols,
+                                         const StringFilterSet *const areasFilter) {
+    // Indentation marker:
+    //get the line from the istream: - we just get the line we do not care about the delimiters
+    std::string line;
+
+    //skip the first line
+    std::getline(is, line);
+    //get a line
+    while (std::getline(is, line)) {
+        // create the substrings and the populate in a Area
+        std::string auth_code = line.substr(0,line.find(','));
+        std::string temp = line.substr(line.find(',')+1);
+        std::string nameEng =temp.substr(0, temp.find(','));
+        std::string nameCym = temp.substr(temp.find(',')+1);
+
+//        std::cout << auth_code << std::endl;
+//        std::cout << nameEng << std::endl;
+//        std::cout << nameCym << std::endl;
+        Area newArea(auth_code);
+        newArea.setName("eng",nameEng);
+        newArea.setName("cym",nameCym);
+        setArea(auth_code,newArea);
+    }
+    //std::cout << "cols: " << cols. << std::endl;
+
+
+//    throw std::logic_error(
+//            "Areas::populateFromAuthorityCodeCSV() has not been implemented!");
+
+
 }
 
 /*
@@ -393,7 +405,18 @@ void Areas::populateFromAuthorityCodeCSV(
     std::runtime_error if a parsing error occurs (e.g. due to a malformed file)
     std::out_of_range if there are not enough columns in cols
 */
+void Areas::populateFromAuthorityByYearCSV(std::istream &is,
+                                           const BethYw::SourceColumnMapping &cols,
+                                           const StringFilterSet *const areasFilter,
+                                           const StringFilterSet *const measuresFilter,
+                                           const YearFilterTuple *const yearsFilter) {
 
+    // Indentation marker:
+
+//    throw std::logic_error(
+//            "Areas::populateFromAuthorityCodeCSV() has not been implemented!");
+
+}
 
 /*
   TODO: Areas::populate(is, type, cols)
