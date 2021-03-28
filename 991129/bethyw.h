@@ -20,14 +20,14 @@
 #include <vector>
 
 #include "lib_cxxopts.hpp"
-
+#include "areas.h"
 #include "datasets.h"
 
 const char DIR_SEP =
 #ifdef _WIN32
-    '\\';
+        '\\';
 #else
-    '/';
+'/';
 #endif
 
 namespace BethYw {
@@ -35,38 +35,45 @@ namespace BethYw {
 /*
   TODO: Enter your student number here!
 */
-const std::string STUDENT_NUMBER = "991129";
+    const std::string STUDENT_NUMBER = "991129";
 
 /*
   Run Beth Yw?, parsing the command line arguments and acting upon them.
 */
-int run(int argc, char *argv[]);
+    int run(int argc, char *argv[]);
 
 /*
   Create a cxxopts instance.
 */
-cxxopts::Options cxxoptsSetup();
+    cxxopts::Options cxxoptsSetup();
 
 /*
   Parse the datasets argument and return a std::vector of all the datasets
   to import. InputFileSource is declared in datasets.h.
 */
-std::vector<BethYw::InputFileSource> parseDatasetsArg(
-  cxxopts::ParseResult& args);
+    std::vector<BethYw::InputFileSource> parseDatasetsArg(
+            cxxopts::ParseResult &args);
 
 /*
   Parse the areas argument and return a std::unordered_set of all the
   areas to import, or an empty set if all areas should be imported.
 */
-std::unordered_set<std::string> parseAreasArg(cxxopts::ParseResult& args);
+    std::unordered_set<std::string> parseAreasArg(cxxopts::ParseResult &args);
 
-std::unordered_set<std::string> parseMeasuresArg(cxxopts::ParseResult& args);
+    std::unordered_set<std::string> parseMeasuresArg(cxxopts::ParseResult &args);
 
-std::tuple<int, int> parseYearsArg(cxxopts::ParseResult &args);
+    std::tuple<int, int> parseYearsArg(cxxopts::ParseResult &args);
 
-    bool isNumber(const std::string& basicString);
+    bool isNumber(const std::string &basicString);
 
-    bool isNumber(const std::string& basicString);
+    bool isNumber(const std::string &basicString);
+
+    void loadDatasets(Areas &areas, std::string dir, std::vector<BethYw::InputFileSource> datasetsToImport,
+                      std::unordered_set<std::string> areasFilter, std::unordered_set<std::string> measuresFilter,
+                      std::tuple<unsigned int, unsigned int> yearsFilter);
+
+    void loadAreas(Areas &areas, std::string dir,
+                   std::unordered_set<std::string> areasFilter);
 } // namespace BethYw
 
 #endif // BETHYW_H_
