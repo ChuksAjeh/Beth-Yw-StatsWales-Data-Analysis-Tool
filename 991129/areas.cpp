@@ -204,35 +204,28 @@ unsigned int Areas::size() const {
 //
 void Areas::populateFromAuthorityCodeCSV(std::istream &is, const BethYw::SourceColumnMapping &cols,
                                          const StringFilterSet *const areasFilter) {
-    // Indentation marker:
-    //get the line from the istream: - we just get the line we do not care about the delimiters
-    std::string line;
-    //skip the first line
-    //check the filter isn't empty
-    std::getline(is, line);
-    //get a line
-    while (std::getline(is, line)) {
-        // create the substrings and the populate in a Area
-        std::string auth_code = line.substr(0, line.find(','));
-        std::string temp = line.substr(line.find(',') + 1);
-        std::string nameEng = temp.substr(0, temp.find(','));
-        std::string nameCym = temp.substr(temp.find(',') + 1);
+    //check the filter isn't empty or null
+    if (areasFilter == nullptr || areasFilter->empty()) {
+        std::string line;
+        //skip the first line
+        std::getline(is, line);
+        //get a line
+        while (std::getline(is, line)) {
+            // create the substrings and the populate in a Area
+            std::string auth_code = line.substr(0, line.find(','));
+            if (areasFilter == nullptr || areasFilter->empty() || areasFilter->find(auth_code) != areasFilter->end()) {
+                std::string temp = line.substr(line.find(',') + 1);
+                std::string nameEng = temp.substr(0, temp.find(','));
+                std::string nameCym = temp.substr(temp.find(',') + 1);
 
-//        std::cout << auth_code << std::endl;
-//        std::cout << nameEng << std::endl;
-//        std::cout << nameCym << std::endl;
-        Area newArea(auth_code);
-        newArea.setName("eng", nameEng);
-        newArea.setName("cym", nameCym);
-        setArea(auth_code, newArea);
+                Area newArea(auth_code);
+                newArea.setName("eng", nameEng);
+                newArea.setName("cym", nameCym);
+                setArea(auth_code, newArea);
+            }
+
+        }
     }
-    //std::cout << "cols: " << cols. << std::endl;
-
-
-//    throw std::logic_error(
-//            "Areas::populateFromAuthorityCodeCSV() has not been implemented!");
-
-
 }
 
 /*
@@ -340,9 +333,9 @@ void Areas::populateFromAuthorityCodeCSV(std::istream &is, const BethYw::SourceC
       &yearsFilter);
 */
 //std::istream &is, const BethYw::SourceColumnMapping &cols,
-//                                         const StringFilterSet *const areasFilter
+//                                       const StringFilterSet *const areasFilter
 void Areas::populateFromWelshStatsJSON(std::istream &is,
-                                       const  BethYw::SourceColumnMapping &cols,
+                                       const BethYw::SourceColumnMapping &cols,
                                        const StringFilterSet *const areasFilter,
                                        const StringFilterSet *const measuresFilter,
                                        const YearFilterTuple *const yearsFilter) {
@@ -356,46 +349,67 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
     //loop through JSON value array:
     for (auto &el : j["value"].items()) {
         auto &data = el.value();
-        std::string code;
-        std::string name;
-        //Hardcoded value for trainData:
-        if(j[metadata]== trainData){ // the code and name are hardcoded in so we need to get those
-            code = cols.find(BethYw::SourceColumn::SINGLE_MEASURE_CODE)->second;
-            name = cols.find(BethYw::SourceColumn::SINGLE_MEASURE_NAME)->second;
-        }else{ //otherwise get the code and name which is dataset dependent:
-            code = data[cols.find(BethYw::SourceColumn::MEASURE_CODE)->second];
-            name = data[cols.find(BethYw::SourceColumn::MEASURE_NAME)->second];
+        //get what we need for area:
+        std::string auth_code;
+        std::string engName;
+        bool accepted = false;
+        auth_code = data[cols.find(BethYw::SourceColumn::AUTH_CODE)->second];
+        engName = data[cols.find(BethYw::SourceColumn::AUTH_NAME_ENG)->second];
+        if (areasFilter == nullptr || areasFilter->empty()) {
+            accepted = true;
+        } else if (areasFilter->find(auth_code) != areasFilter->end()
+                   || areasFilter->find(engName) != areasFilter->end()) {
+            accepted = true;
         }
-        //populate the relevant part of the parsers and convert year to string.
-        std::string authorityCode = data[cols.find(BethYw::SourceColumn::AUTH_CODE)->second];
-        std::string year = data[cols.find(BethYw::SourceColumn::YEAR)->second];
-        unsigned int yearAsNum = std::stoi(year);
-        std::string englishName = data[cols.find(BethYw::SourceColumn::AUTH_NAME_ENG)->second];
+        if (accepted == true) {
+            Area newArea(auth_code);
+            newArea.setName("eng", engName);
+            std::string year = data[cols.find(BethYw::SourceColumn::YEAR)->second];
+            unsigned int yearAsNum = std::stoi(year);
+            bool year_accepted = false;
+            if ((std::get<0>(*yearsFilter) == 0 && std::get<1>(*yearsFilter) == 0) || yearsFilter == nullptr) {
+                year_accepted = true;
+            } else if (std::get<0>(*yearsFilter) <= yearAsNum ||
+                       std::get<1>(*yearsFilter) >= yearAsNum) { // find the range of the tuple its the two years
+                year_accepted = true;
+            }
+            if (year_accepted) {
 
-        double val = 0;
-        if(j[metadata]!=enviData ){
-            val= data[cols.find(BethYw::SourceColumn::VALUE)->second];
-        }else{
-            std::string t = data[cols.find(BethYw::SourceColumn::VALUE)->second];
-            val = std::stod(t);
+                std::string code;
+                std::string name;
+                if (j[metadata] == trainData) { // the code and name are hardcoded in so we need to get those
+                    code = cols.find(BethYw::SourceColumn::SINGLE_MEASURE_CODE)->second;
+                    name = cols.find(BethYw::SourceColumn::SINGLE_MEASURE_NAME)->second;
+                } else { //otherwise get the code and name which is dataset dependent:
+                    code = data[cols.find(BethYw::SourceColumn::MEASURE_CODE)->second];
+                    name = data[cols.find(BethYw::SourceColumn::MEASURE_NAME)->second];
+                    std::transform(code.begin(), code.end(), code.begin(), ::tolower);
+                    double val = 0;
+                    if (j[metadata] != enviData) {
+                        val = data[cols.find(BethYw::SourceColumn::VALUE)->second];
+                    } else {
+                        std::string t = data[cols.find(BethYw::SourceColumn::VALUE)->second];
+                        val = std::stod(t);
+                    }
+                    bool measures_accepted = false;
+                    if (measuresFilter == nullptr || measuresFilter->empty()) {
+                        measures_accepted = true;
+                    } else if (measuresFilter->find(auth_code) != measuresFilter->end()
+                               || measuresFilter->find(engName) != measuresFilter->end()) {
+                        measures_accepted = true;
+                    }
+                    if (measures_accepted) {
+                        Measure temp(code, name);
+                        temp.setValue(yearAsNum, val);
+                        newArea.setMeasure(code, temp);
+                        setArea(auth_code, newArea);
+                    }
+                }
+
+            }
         }
-        //create an Area obj and add to the container.
-        std::transform(authorityCode.begin(), authorityCode.end(), authorityCode.begin(), ::toupper);
-        Area newArea(authorityCode);
-        std::transform(code.begin(), code.end(), code.begin(), ::toupper);
-        newArea.setName("eng",englishName);
-        Measure newMeasure(code,name);
-        newMeasure.setValue(yearAsNum,val);
-        newArea.setMeasure(code,newMeasure);
-        this->setArea(authorityCode,newArea);
-
     }
-
-
-
-
 }
-
 
 /*
   TODO: Areas::populateFromAuthorityByYearCSV(is,
@@ -470,10 +484,34 @@ void Areas::populateFromAuthorityByYearCSV(std::istream &is,
 
     // Indentation marker:
 
-//    throw std::logic_error(
-//            "Areas::populateFromAuthorityCodeCSV() has not been implemented!");
-
+    throw std::logic_error(
+            "Areas::populateFromAuthorityByYearCSV() has not been implemented!");
+//    std::string line;
+//    std::string header;
+//    std::getline(is, header); // contains the headers.
+//    std::vector<std::string> years;
+//    std::string delim = ",";
+//    size_t pos = line.find(',');
+//    header.erase(0, pos + delim.length()); // erase the Authority code text;
+//    while (size_t posL = header.find(',') != std::string::npos) { // make vectors of years:
+//        years.push_back(header.substr(0, pos));
+//        header.erase(0, pos + header.find(','));
+//    }
+//
+//    for (auto &year : years) {
+//        //get the auth code:
+//        std::getline(is, line);
+//        std::string auth_code = line.substr(0, line.find(','));
+//        line.erase(0, pos + delim.length());// remove the auth_code from line:
+//        //get area:
+//        Area temp = getArea(auth_code);
+//        //loop through the rest of the line:
+//        while (size_t posx = line.find(',') != std::string::npos) {
+//            //get list of measurements:
+//        }
+//    }
 }
+
 
 /*
   TODO: Areas::populate(is, type, cols)
@@ -619,12 +657,14 @@ void Areas::populate(
         const StringFilterSet *const measuresFilter,
         const YearFilterTuple *const yearsFilter) {
     if (type == BethYw::AuthorityCodeCSV) {
+        //call on the populate from AuthorityCode
         populateFromAuthorityCodeCSV(is, cols, areasFilter);
-    } else if(type == BethYw::AuthorityByYearCSV) {
-        populateFromAuthorityByYearCSV(is,cols,areasFilter,measuresFilter,yearsFilter);
-    }else if (type == BethYw::WelshStatsJSON){
-        populateFromWelshStatsJSON(is,cols,areasFilter,measuresFilter,yearsFilter);
-    }else{
+    } else if (type == BethYw::AuthorityByYearCSV) {
+        //call on populate from authority by year
+        populateFromAuthorityByYearCSV(is, cols, areasFilter, measuresFilter, yearsFilter);
+    } else if (type == BethYw::WelshStatsJSON) {
+        populateFromWelshStatsJSON(is, cols, areasFilter, measuresFilter, yearsFilter);
+    } else {
         throw std::runtime_error("Areas::populate: Unexpected data type");
     }
 }

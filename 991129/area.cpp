@@ -128,15 +128,18 @@ void Area::setName(std::string lang, std::string name) {
     auto measure2 = area.getMeasure("pop");****
 */
 Measure &Area::getMeasure(std::string key){
+    //convert key to lowercase:
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
     if (this->measurements.find(key) == this->measurements.end()) {
+        //throw exception if no key is found
         throw std::out_of_range("No measure found matching " + key);
     }
+    //return found key:
     return this->measurements.at(key);
 }
 
 
-/*
+/**
   TODO: Area::setMeasure(codename, measure)
   Add a particular Measure to this Area object. Note that the Measure's
   codename should be converted to lowercase.
@@ -160,19 +163,23 @@ Measure &Area::getMeasure(std::string key){
     area.setMeasure(codename, measure);*****
 */
 void Area::setMeasure(std::string codename, Measure measure) {
+    // convert codename to lowercase:
     std::transform(codename.begin(), codename.end(), codename.begin(), ::tolower);
+    //if the the codename is not available then insert to the mesurements map:
     if (this->measurements.find(codename) == this->measurements.end()) {
         this->measurements.insert({ codename, measure});
     } else {
+        //copy the existing measurements over to a new map.
         std::map<std::string, Measure>newMeasurements;
         //this->measurements.erase(codename);
         for(auto& x : this->measurements){
-            if(x.first != codename){
+            if(x.first != codename){ // if the mapped value we are looking for is found it wont be inserted.
                 newMeasurements.insert(x);
             }
         }
+        //add in the new pair to 'overwrite' old one.
         newMeasurements.insert(std::pair<std::string,Measure>( codename, measure));
-        this->setMeasurements(newMeasurements);
+        this->setMeasurements(newMeasurements); // update the measurements list.
     }
 }
 
@@ -196,22 +203,35 @@ void Area::setMeasure(std::string codename, Measure measure) {
     auto size = area.size();
 */
 unsigned int Area::size() const {
-    return this->measurements.size();
+    return this->measurements.size(); // return the measurements map size.
 }
 
-const std::map<std::string, std::string> &Area::getNames() const {
+// getter for names map
+ std::map<std::string, std::string> &Area::getNames() {
     return names;
 }
 
-void Area::setNames(const std::map<std::string, std::string> &names) {
+//setter for names map.
+/**
+ * @param names takes in a new map to update the field names.
+ *
+ * */
+void Area::setNames( std::map<std::string, std::string> names) {
     Area::names = names;
 }
 
-const std::map<std::string, Measure> &Area::getMeasurements()  {
+//getter for measurements map:
+ std::map<std::string, Measure> &Area::getMeasurements()  {
     return measurements;
 }
 
-void Area::setMeasurements(const std::map<std::string, Measure> &measurements) {
+//setter for measurements map.
+/**
+ * @param measurements takes in a new map to update the field measurements.
+ *
+ * */
+
+void Area::setMeasurements( std::map<std::string, Measure> measurements) {
     Area::measurements = measurements;
 }
 
