@@ -183,9 +183,11 @@ const std::string &Measure::getCode() const {
     measure.setValue(1999, 12345678.9);
 */
 void Measure::setValue(unsigned int key, double value) {
+    // if the key isn't found then insert as a new key:
     if (this->getReadings().find(key) == this->getReadings().end()) {
         this->readings.insert({key, value});
     } else {
+        //erase the current key and then update with new one.
         this->readings.erase(key);
         this->readings.insert({key, value});
     }
@@ -210,6 +212,7 @@ void Measure::setValue(unsigned int key, double value) {
     measure.setValue(1999, 12345678.9);
     auto size = measure.size(); // returns 1
 */
+//get the reading map size.
 unsigned int Measure::size() const {
     return this->getReadings().size();
 }
@@ -233,6 +236,8 @@ unsigned int Measure::size() const {
     auto diff = measure.getDifference(); // returns 1.0
 */
 double Measure::getDifference() const {
+    // if the map is empty - then we cannot get a difference as there is nothing to get a
+    // difference of
     if (this->getReadings().empty()) {
         return 0.0;
     } else {
@@ -240,7 +245,7 @@ double Measure::getDifference() const {
 
         double second = std::prev(this->getReadings().end())->second;
         double diff = (first - second);
-        if (diff < 0) {
+        if (diff < 0) { // we want the absolute difference so don't let it get -ve.
             return second - first;
         } else {
             return diff;
@@ -305,9 +310,7 @@ Measure::~Measure() {
 
 }
 
-void Measure::setCodename(const std::string &code) {
 
-}
 
 const std::map<unsigned int, double> Measure::getReadings() {
     return std::map<unsigned int, double>();

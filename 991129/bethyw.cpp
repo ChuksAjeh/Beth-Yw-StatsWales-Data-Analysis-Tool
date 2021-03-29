@@ -63,32 +63,39 @@ int BethYw::run(int argc, char *argv[]) {
 
     // Parse data directory argument
     std::string dir = args["dir"].as<std::string>() + DIR_SEP;
+// surround in try catch:
+    try{
+        // Parse other arguments and import data
+        auto datasetsToImport = BethYw::parseDatasetsArg(args);
+        auto areasFilter = BethYw::parseAreasArg(args);
+        auto measuresFilter = BethYw::parseMeasuresArg(args);
+        auto yearsFilter = BethYw::parseYearsArg(args);
 
-    // Parse other arguments and import data
-    auto datasetsToImport = BethYw::parseDatasetsArg(args);
-    auto areasFilter = BethYw::parseAreasArg(args);
-    auto measuresFilter = BethYw::parseMeasuresArg(args);
-    auto yearsFilter = BethYw::parseYearsArg(args);
 
+        Areas data = Areas();
 
-    Areas data = Areas();
+//         BethYw::loadAreas(data, dir, areasFilter);
+//
+//         BethYw::loadDatasets(data,
+//                              dir,
+//                              datasetsToImport,
+//                              areasFilter,
+//                              measuresFilter,
+//                              yearsFilter);
 
-    // BethYw::loadAreas(data, dir, areasFilter);
-    //
-    // BethYw::loadDatasets(data,
-    //                      dir,
-    //                      datasetsToImport,
-    //                      areasFilter,
-    //                      measuresFilter,
-    //                      yearsFilter);
-
-    if (args.count("json")) {
-        // The output as JSON
-        std::cout << data.toJSON() << std::endl;
-    } else {
-        // The output as tables
-        // std::cout << data << std::endl;
+        if (args.count("json")) {
+            // The output as JSON
+            std::cout << data.toJSON() << std::endl;
+        } else {
+            // The output as tables
+            // std::cout << data << std::endl;
+        }
+    }catch(const std::runtime_error &e ){
+        std::cout <<"Error importing dataset: " << "\n" << e.what() << std::endl;
+    }catch(const std::invalid_argument &e){
+        std::cerr << e.what() << std::endl;
     }
+
 
     return 0;
 }
@@ -286,25 +293,12 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
         cxxopts::ParseResult &args) {
     // The unordered set you will return
     std::unordered_set<std::string> areas;
-//    std::unordered_set<std::string> allAreaCodes;
-//    std::ifstream areaCodesFile;
-//    areaCodesFile.exceptions(std::ifstream::badbit);
+
 //    /*reference:
 //     * Execeptions https://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file
 //     * */
 //    //try to open areas.csv
-//    try {
-//        areaCodesFile.open("./datasets/areas.csv");
-//        std::string line;
-//        while (getline(areaCodesFile, line, ',')) {
-//            allAreaCodes.insert(line);
-//            getline(areaCodesFile, line, ',');
-//            getline(areaCodesFile, line);
-//        }
-//    } catch (const std::ifstream::failure &e) {
-//        std::cout << "ERROR when opening areas.csv file" << std::endl;
-//    }
-//
+
     // Retrieve the areas argument like so:
     auto areasDataset = args["areas"].as<std::vector<std::string>>();
     if (!areasDataset.empty()) {
@@ -312,33 +306,14 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
             std::transform(area.begin(), area.end(), area.begin(), ::toupper);
         }
     }
-//    //no areas arg provided: - return empty set.
-//    if (areasDataset.empty()) {
-//        return areas;
-//    } else { //otherwise
-//        for (auto &area : areasDataset) {
-//            if(area =="ALL"){
-//                areas.clear();
-//                break;
-//            }else{
-//                if(std::find(allAreaCodes.begin(), allAreaCodes.end(),area)!= allAreaCodes.end()){
-//                    areas.insert(area);
-//                }else{
-//                    throw std::invalid_argument("Invalid input for area argument");
-//                }
-//            }
-//        }
-//    }
+
+    // loop through if the dataSet:
     for (auto &area : areasDataset) {
+        // if at any point we find ALl we clear.
         if (area == "ALL") {
             areas.clear();
             break;
         } else {
-//                if(std::find(ares.begin(), allAreaCodes.end(),area)!= allAreaCodes.end()){
-//                    areas.insert(area);
-//                }else{
-//                    throw std::invalid_argument("Invalid input for area argument");
-//                }
             areas.insert(area);
         }
     }
@@ -445,67 +420,22 @@ std::tuple<int, int> BethYw::parseYearsArg(cxxopts::ParseResult &args) {
         }
     } else if (yearInput.size() > 4) {
         std::string year_one_as_string;
-        year_one_as_string = yearInput.substr(0, yearInput.find('-'));
+        year_one_as_string = yearInput.substr(0, yearInput.find('-')); // get the first year as a substring.
         std::string year_two_as_string;
-        year_two_as_string = yearInput.substr(yearInput.find('-') + 1, yearInput.length());
-        if (!isNumber(year_one_as_string)) {
+        year_two_as_string = yearInput.substr(yearInput.find('-') + 1, yearInput.length()); //get the substring
+        if (!isNumber(year_one_as_string)) { // if the first year is not a number throw an error.
             throw std::invalid_argument("Invalid input for years argument");
         }
-        if (!isNumber(year_two_as_string)) {
+        if (!isNumber(year_two_as_string)) { // if the first year is not a number throw an error.
             throw std::invalid_argument("Invalid input for years argument");
         } else {
             year_one = std::stoi(year_one_as_string);
             year_two = std::stoi(year_two_as_string);
-            years = {year_one, year_two};
+            years = {year_one, year_two};  //create a tuple tha holds year one and two.
         }
-    } else if (yearInput.size() > 9) {
+    } else if (yearInput.size() > 9) { // we know this cannot be a valid argument so we need to throw an invalid argument.
         throw std::invalid_argument("Invalid input for years argument");
     }
-
-
-
-////    we either get the first year or the only year.
-//    try {
-//        if (yearInput.find('-') != std::string::npos) {
-//            yearAsString = yearInput.substr(0, yearInput.find('-'));
-//        } else {
-//            yearAsString = yearInput;
-//        }
-//    } catch (std::invalid_argument &ia) {
-//        throw std::invalid_argument("Invalid input for years argument");
-//    }
-//
-//
-//    if (isNumber(yearAsString)) {
-//        year_one = std::stoi(yearAsString);
-//
-//        if (yearInput.length() == 4) {
-//            years = {year_one, year_one};
-//        }
-//
-//        if (year_one == 0) {
-//            years = {0, 0};
-//        }
-//
-//        if (yearInput.length() == 9) {
-//            std::string temp = yearInput.substr(
-//                    yearInput.find('-') + 1,
-//                    yearInput.length() - 1);
-//
-//            if (isNumber(temp)) {
-//                year_two = std::stoi(temp);
-//                years = {year_one, year_two};
-//            } else {
-//                throw std::invalid_argument("Invalid input for years argument");
-//            }
-//        }
-//    } else {
-//        throw std::invalid_argument("Invalid input for years argument");
-//    }
-//
-//
-//    //call function to check if the string is an integer.
-//
     return years;
 }
 
@@ -625,6 +555,7 @@ void loadDatasets(Areas &areas, std::string dir, std::vector<BethYw::InputFileSo
         BethYw::SourceColumnMapping column = x.COLS;
         BethYw::SourceDataType type = x.PARSER;
         std::istream &data_is_open = temp.open();
+        //call on the populate function to populate using the relevant type.
         areas.populate(data_is_open, type, column, &areasFilter, &measuresFilter, &yearsFilter);
     }
 }

@@ -82,14 +82,14 @@ InputFile::InputFile(const std::string& filePath) : InputSource(filePath) {
 */
 std::istream& InputFile::open() {
     try{
-
+        //try to open the file
         this->file.open(this->getSource(),std::ifstream::in);
-        if(!file.is_open()){
+        if(!file.is_open()){// if unable to open file then throw runtime:
             throw std::runtime_error("InputFile::open: Failed to open file "+this->getSource());
         }
         std::istream& in = this->file;
-        return in;
-    }catch(const std::runtime_error& e){
+        return in; // return istream;
+    }catch(const std::runtime_error& e){ //catch and throw runtime error.
         throw std::runtime_error("InputFile::open: Failed to open file "+this->getSource());
     }
 }

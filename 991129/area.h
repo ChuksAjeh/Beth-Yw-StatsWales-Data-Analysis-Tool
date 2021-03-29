@@ -42,13 +42,13 @@ public:
     Measure &getMeasure(std::string key) ;
     void setMeasure(std::string codename, Measure measure);
 
-    const std::map<std::string, std::string> &getNames() const ;
+     std::map<std::string, std::string> &getNames() ;
 
-    void setNames(const std::map<std::string, std::string> &names);
+    void setNames(std::map<std::string, std::string> names);
 
-    const std::map<std::string, Measure> &getMeasurements();
+     std::map<std::string, Measure> &getMeasurements();
 
-    void setMeasurements(const std::map<std::string, Measure> &measurements);
+    void setMeasurements( std::map<std::string, Measure> measurements);
 
     unsigned int size() const;
 
