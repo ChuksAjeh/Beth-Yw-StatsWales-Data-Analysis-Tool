@@ -1,35 +1,33 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
   )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/area.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/area.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/areas.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/areas.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/bethyw.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/bethyw.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/input.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/input.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/lib_catch_main.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/lib_catch_main.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/main.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/main.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/measure.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/measure.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test1.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test1.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test10.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test10.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test11.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test11.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test12.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test12.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test2.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test2.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test3.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test3.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test4.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test4.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test5.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test5.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test6.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test6.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test7.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test7.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test8.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test8.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/test9.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test9.cpp.obj"
-  "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/991129/tests/testall.cpp" "C:/Users/chuks/Documents/Projects/C++/CSC371 Coursework Framework v1.0.2/cmake-build-debug/CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/testall.cpp.obj"
-  )
-set(CMAKE_CXX_COMPILER_ID "GNU")
 
-# The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "../991129"
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/area.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/area.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/area.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/areas.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/areas.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/areas.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/bethyw.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/bethyw.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/bethyw.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/input.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/input.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/input.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/lib_catch_main.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/lib_catch_main.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/lib_catch_main.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/main.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/main.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/main.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/measure.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/measure.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/measure.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test1.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test1.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test1.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test10.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test10.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test10.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test11.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test11.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test11.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test12.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test12.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test12.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test2.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test2.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test2.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test3.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test3.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test3.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test4.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test4.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test4.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test5.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test5.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test5.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test6.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test6.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test6.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test7.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test7.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test7.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test8.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test8.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test8.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/test9.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test9.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/test9.cpp.o.d"
+  "/Users/chuks.ajeh/Documents/PDT/CPlusPlus/Beth-Yw-StatsWales-Data-Analysis-Tool/991129/tests/testall.cpp" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/testall.cpp.o" "gcc" "CMakeFiles/CSC371_Coursework_Framework_v1_0_2.dir/991129/tests/testall.cpp.o.d"
   )
 
 # Targets to which this target links.
