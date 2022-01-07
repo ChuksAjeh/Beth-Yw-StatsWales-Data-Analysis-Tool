@@ -27,7 +27,7 @@
   to overload.
 */
 class Area {
-private:
+protected:
     const std::string &localAuthorityCode;
     std::map<std::string,std::string> names;
     std::map<std::string,Measure> measurements;
