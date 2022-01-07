@@ -1,3 +1,0 @@
-C:\Users\chuks\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\203.5981.166\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\991129.dir/objects.a
-C:\MinGW\bin\ar.exe cr CMakeFiles\991129.dir/objects.a @CMakeFiles\991129.dir\objects1.rsp
-C:\MinGW\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\991129.dir/objects.a -Wl,--no-whole-archive  -o 991129.exe -Wl,--out-implib,lib991129.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\991129.dir\linklibs.rsp
